@@ -7,6 +7,7 @@ Base = declarative_base()
 
 
 class User(Base):
+    """ User class for interacting with the database"""
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, index=True)
@@ -26,6 +27,7 @@ class User(Base):
     likes = relationship("Likes", back_populates="user")
 
 class Post(Base):
+    """Base class for post models that represent a single post on a site.""" 
     __tablename__ = "posts"
 
     id = Column(Integer, primary_key=True, nullable=False)
@@ -42,6 +44,7 @@ class Post(Base):
     likes = relationship("Likes", back_populates="post")
 
 class Comment(Base):
+    """ Base class for comments"""
     __tablename__ = 'comments'
 
     id = Column(Integer, primary_key=True)
@@ -55,6 +58,7 @@ class Comment(Base):
     post = relationship('Post', back_populates='comments')
 
 class Likes(Base):
+    """Base class for users that have attachments"""
     __tablename__ = "likes"
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id", ondelete='CASCADE'), nullable=False, index=True)
