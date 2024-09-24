@@ -2,6 +2,7 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
+    """Settings class to store all the configurations""" 
     database_hostname: str
     database_port: str
     database_password: str
