@@ -14,6 +14,18 @@ router = APIRouter(prefix="/api/v1/posts", tags=["Comments"])
 @router.get("/{post_id}/comments", response_model=List[schemas.CommentResponse])
 def get_post_comments(post_id: int, db: Session = Depends(get_db), current_user: int = Depends(get_current_user),
                  page_num: int = 1, page_size: int = 10):
+    """Get comments for a post
+    Args:
+        post_id (int): Post ID
+        db (Session, optional): Database session. Defaults to Depends(get_db).
+        current_user (int, optional): Current user. Defaults to Depends(get_current_user).
+        page_num (int, optional): Page number. Defaults to 1.
+        page_size (int, optional): Page size. Defaults to 10.
+    Raises:
+        HTTPException: [description]
+    Returns:
+        List[schemas.CommentResponse]: List of comments
+    """
     start = (page_num - 1) * page_size
     end = start + page_size
 
@@ -29,6 +41,17 @@ def get_post_comments(post_id: int, db: Session = Depends(get_db), current_user:
 @router.post("/{post_id}/comments", status_code=status.HTTP_201_CREATED, response_model=schemas.CommentResponse)
 def create_comment(post_id: int, comment: schemas.CommentCreate, db: Session = Depends(get_db),
                     current_user: int = Depends(get_current_user)):
+    """Create a comment
+    Args:
+        post_id (int): Post ID
+        comment (schemas.CommentCreate): Comment data
+        db (Session, optional): Database session. Defaults to Depends(get_db).
+        current_user (int, optional): Current user. Defaults to Depends(get_current_user).
+    Raises:
+        HTTPException: [description]
+    Returns:
+        Comment: Comment object
+    """
     post = db.query(Post).filter(Post.id == post_id).first()
 
     if not post:
@@ -46,6 +69,18 @@ def create_comment(post_id: int, comment: schemas.CommentCreate, db: Session = D
 @router.put("/{post_id}/comments/{comment_id}", response_model=schemas.CommentResponse)
 def comment_update(post_id: int, comment_id: int, updated_comment: schemas.CommentCreate, db: Session = Depends(get_db),
                    current_user: int = Depends(get_current_user)):
+    """Update a comment
+    Args:
+        post_id (int): Post ID
+        comment_id (int): Comment ID
+        updated_comment (schemas.CommentCreate): Updated comment data
+        db (Session, optional): Database session. Defaults to Depends(get_db).
+        current_user (int, optional): Current user. Defaults to Depends(get_current_user).
+    Raises:
+        HTTPException: [description]
+    Returns:
+        Comment: Comment object
+    """
     post = db.query(Post).filter(Post.id == post_id).first()
 
     if not post:
@@ -64,6 +99,17 @@ def comment_update(post_id: int, comment_id: int, updated_comment: schemas.Comme
 @router.delete("/{post_id}/comments/{comment_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_comment(post_id: int, comment_id: int, db: Session = Depends(get_db),
                     current_user: int = Depends(get_current_user)):
+    """Delete a comment
+    Args:
+        post_id (int): Post ID
+        comment_id (int): Comment ID
+        db (Session, optional): Database session. Defaults to Depends(get_db).
+        current_user (int, optional): Current user. Defaults to Depends(get_current_user).
+    Raises:
+        HTTPException: [description]
+    Returns:
+        Response: Response object
+    """
     post = db.query(Post).filter(Post.id == post_id).first()
 
     if not post:
