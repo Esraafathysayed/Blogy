@@ -13,6 +13,16 @@ router = APIRouter(prefix="/api/v1/likes", tags=["Likes"])
 @router.post("/", status_code=status.HTTP_201_CREATED)
 def like_post(like: schemas.LikeRequest, db: Session = Depends(get_db),
          current_user: int = Depends(get_current_user)):
+    """Like a post
+    Args:
+        like (schemas.LikeRequest): Like data
+        db (Session, optional): Database session. Defaults to Depends(get_db).
+        current_user (int, optional): Current user. Defaults to Depends(get_current_user).
+    Raises:
+        HTTPException: [description]
+    Returns:
+        dict: Message
+    """
     post = db.query(Post).filter(Post.id == like.post_id).first()
 
     if not post:
