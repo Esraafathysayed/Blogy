@@ -12,6 +12,13 @@ router = APIRouter(prefix="/api/v1/users", tags=["Users"])
 
 @router.get('/', response_model=List[schemas.UserResponse])
 def get_users(page_num: int =  1, page_size: int = 10, db: Session = Depends(get_db), current_user: int = Depends(get_current_user)):
+	""" Get all users 
+	- **page_num**: int
+	- **page_size**: int
+	- **db**: Session = Depends(get_db)
+	- **current_user**: int = Depends(get_current_user)
+	- **return**: List[schemas.UserResponse]
+	"""
 	start = (page_num - 1) * page_size
 	end = start + page_size
 	users = db.query(User).slice(start, end).all()
@@ -19,6 +26,12 @@ def get_users(page_num: int =  1, page_size: int = 10, db: Session = Depends(get
 
 @router.get("/{id}", response_model=schemas.OneUserResponse)
 def get_user(id: int, db: Session = Depends(get_db), current_user: int = Depends(get_current_user)):
+	""" Get a single user
+	- **id**: int
+	- **db**: Session = Depends(get_db)
+	- **current_user**: int = Depends(get_current_user)
+	- **return**: schemas.OneUserResponse
+	"""
 	user = db.query(User).filter(User.id == id).first()
 
 	if not user:
@@ -30,6 +43,13 @@ def get_user(id: int, db: Session = Depends(get_db), current_user: int = Depends
 @router.put("/{id}", response_model=schemas.UserUpdateResponse)
 def update_user(id: int, updated_user: schemas.UserUpdateRequest, db: Session = Depends(get_db),
 				current_user: int = Depends(get_current_user)):
+	""" Update a user
+	- **id**: int
+	- **updated_user**: schemas.UserUpdateRequest
+	- **db**: Session = Depends(get_db)
+	- **current_user**: int = Depends(get_current_user)
+	- **return**: schemas.UserUpdateResponse
+	"""
 	user = db.query(User).filter(User.id == id)
 	if not user.first():
 		raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="user not found")
@@ -52,6 +72,12 @@ def update_user(id: int, updated_user: schemas.UserUpdateRequest, db: Session = 
 
 @router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_user(id: int, db: Session = Depends(get_db), current_user: int = Depends(get_current_user)):
+	""" Delete a user
+	- **id**: int
+	- **db**: Session = Depends(get_db)
+	- **current_user**: int = Depends(get_current_user)
+	- **return**: None
+	"""
 	user = db.query(User).filter(User.id == id)
 
 	if not user.first():
