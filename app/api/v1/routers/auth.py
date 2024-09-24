@@ -14,6 +14,15 @@ router = APIRouter(prefix="/api/v1/auth", tags=["Auth"])
 
 @router.post("/login", response_model=schemas.TokenResponse)
 def user_login(user_credentials: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+    """User login
+    Args:
+        user_credentials (OAuth2PasswordRequestForm, optional): User credentials. Defaults to Depends().
+        db (Session, optional): Database session. Defaults to Depends().
+    Raises:
+        HTTPException: Incorrect username or password
+    Returns:
+        dict: Access token and token type
+    """
     user = authenticate_user(db, user_credentials.username, user_credentials.password)
 
     if not user:
@@ -25,6 +34,15 @@ def user_login(user_credentials: OAuth2PasswordRequestForm = Depends(), db: Sess
 
 @router.post("/register", status_code=status.HTTP_201_CREATED, response_model=schemas.UserCreateResponse)
 def user_register(user: schemas.UserCreateRequest, db: Session = Depends(get_db)):
+    """User registration
+    Args:
+        user (schemas.UserCreateRequest): User data
+        db (Session, optional): Database session. Defaults to Depends().
+    Raises:
+        HTTPException: [description]
+    Returns:
+        User: User object
+    """
     existing_user = db.query(User).filter(
         or_(User.username == user.username, User.email == user.email, User.phone == str(user.phone))).first()
     if existing_user:
